@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">SharcApp</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="SleeveLiveModeButtonText">Live</string>
+    <string name="SleeveStopButtonText">Stop</string>
+    <string name="SleeveRecordModeButtonText">Record</string>
+    <string name="RecordTextFieldText">Rec Time</string>
+    <string name="SleeveStatusText">Sleeve Status</string>
+    <string name="ArmStartButtonText">Start</string>
+    <string name="ArmStopButtonText">Stop</string>
+    <string name="ArmStatusText">Status</string>
+    <string name="ArmControlsTitleText">Arm Controls</string>
+    <string name="SleeveControlsTitleText">Sleeve Controls</string>
+    <string name="CalibrateButtonText">Calibrate</string>
+    <string name="CalibrateButtonStatusText">Medium Text</string>
+</resources>
