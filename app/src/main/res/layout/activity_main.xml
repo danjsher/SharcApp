@@ -125,9 +125,9 @@
         android:layout_height="wrap_content"
         android:text="@string/CalibrateButtonText"
         android:id="@+id/CalibrateButton"
+        android:layout_marginTop="46dp"
         android:layout_below="@+id/gridLayout2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"

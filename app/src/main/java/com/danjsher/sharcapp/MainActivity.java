@@ -221,34 +221,35 @@ public class MainActivity extends AppCompatActivity {
                                 );
 
                                 new SharcComThread().execute(armComParams, comParams);
-
-                                //put sleeve in calibrate mode
-                                //comParams.ipAddr = "192.168.23.1";
-                                //comParams.port = 12347;
-                                //new SharcComThread().execute(comParams);
-                                calibrateButton.setText("Bicep Flex");
+                                calibrateButton.setText("Start Bicep Flex");
                                 v.setTag(1);
                                 break;
                             case 1:
                                 comParams.message = "5";
                                 new SharcComThread().execute(comParams);
-                                calibrateButton.setText("Shoulder Flex");
+                                calibrateButton.setText("Start Shoulder Flex");
                                 v.setTag(2);
                                 break;
                             case 2:
                                 comParams.message = "6";
                                 new SharcComThread().execute(comParams);
-                                calibrateButton.setText("Shoulder Rot Rest");
+                                calibrateButton.setText("Start Shoulder Rot Rest");
                                 v.setTag(3);
                                 break;
                             case 3:
                                 comParams.message = "7";
                                 new SharcComThread().execute(comParams);
-                                calibrateButton.setText("Shoulder Rot F/B");
+                                calibrateButton.setText("Start Shoulder Rot F/B");
                                 v.setTag(4);
                                 break;
                             case 4:
                                 comParams.message = "8";
+                                new SharcComThread().execute(comParams);
+                                calibrateButton.setText("Complete Calibration");
+                                v.setTag(5);
+                                break;
+                            case 5:
+                                comParams.message = "0"; // put sleeve in stopped state
                                 new SharcComThread().execute(comParams);
                                 calibrateButton.setText("Calibrate");
                                 v.setTag(0);
