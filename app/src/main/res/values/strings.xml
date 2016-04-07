@@ -13,6 +13,13 @@
     <string name="ArmStatusText">Status</string>
     <string name="ArmControlsTitleText">Arm Controls</string>
     <string name="SleeveControlsTitleText">Sleeve Controls</string>
+    <string name="CalibrateBicepButtonText">Calibrate Bicep</string>
     <string name="CalibrateButtonText">Calibrate</string>
     <string name="CalibrateButtonStatusText">Medium Text</string>
+    <string name="ShoulderFlexAtSideText">0.0</string>
+    <string name="ShoulderFlexOutText">0.0</string>
+    <string name="BicepFlexMinText">0</string>
+    <string name="ShoulderRotationFrontText">0.0</string>
+    <string name="ShoulderRotationBackText">0.0</string>
+    <string name="BicepFlexMaxText">0</string>
 </resources>

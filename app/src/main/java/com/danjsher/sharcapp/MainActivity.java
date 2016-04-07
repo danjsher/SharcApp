@@ -1,15 +1,7 @@
 package com.danjsher.sharcapp;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.AsyncTask;
-import android.provider.ContactsContract;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,16 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.io.IOException;
-import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,33 +41,16 @@ public class MainActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
         }
-        /*
-        // Creating a new intent to start the polling service
-        Intent mServiceIntent = new Intent(this, StatPollService.class);
-        this.startService(mServiceIntent);
-
-        // create intent filter for StatPollService broadcasts
-        IntentFilter mStatusIntentFilter = new IntentFilter(Constants.BROADCAST_ACTION);
-
-        // create the broadcast receiver
-        ResponseReceiver mResponseReceiver = new ResponseReceiver();
-
-        // register broadcast receiver with intent filter
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                mResponseReceiver,
-                mStatusIntentFilter
-        );
-        */
 
         // Button click handlers
-
         final Button armStartButton = (Button)findViewById(R.id.ArmStartButton);
 
         armStartButton.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         new SharcComThread().execute(
-                                new ComParams("1",
+                                new ComParams(
+                                        "2 1",
                                         armSocket,
                                         "192.168.23.19",
                                         12346,
@@ -100,7 +67,8 @@ public class MainActivity extends AppCompatActivity {
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         new SharcComThread().execute(
-                                new ComParams("0",
+                                new ComParams(
+                                        "2 0",
                                         armSocket,
                                         "192.168.23.19",
                                         12346,
@@ -121,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                                         sleeveSocket,
                                         "192.168.23.1",
                                         12347,
-                                        (TextView)findViewById(R.id.SleeveStatusText)
+                                        (TextView) findViewById(R.id.SleeveStatusText)
                                 )
                         );
                     }
@@ -134,7 +102,8 @@ public class MainActivity extends AppCompatActivity {
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         new SharcComThread().execute(
-                                new ComParams("0",
+                                new ComParams(
+                                        "0",
                                         sleeveSocket,
                                         "192.168.23.1",
                                         12347,
@@ -191,75 +160,180 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-        final Button calibrateButton = (Button)findViewById(R.id.CalibrateButton);
+        final Button calibrateBicepButton = (Button) findViewById(R.id.CalibrateBicepButton);
 
-        calibrateButton.setTag(0);
+        calibrateBicepButton.setTag(0);
 
-        calibrateButton.setOnClickListener(
+        calibrateBicepButton.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         final int status = (Integer) v.getTag();
-
-                        ComParams comParams = new ComParams("4",
-                                sleeveSocket,
-                                "192.168.23.1",
-                                12347,
-                                (TextView)findViewById(R.id.CalibrateButtonStatusText)
-                        );
-
-
-
-                        switch(status) {
-                            case 0:
-                                comParams.message = "4";
-                                // put arm in calibrate mode
-                                ComParams armComParams = new ComParams( "4",
-                                        armSocket,
-                                        "192.168.23.19",
-                                        12346,
-                                        (TextView)findViewById(R.id.CalibrateButtonStatusText)
-                                );
-
-                                new SharcComThread().execute(armComParams, comParams);
-                                calibrateButton.setText("Start Bicep Flex");
+                        switch (status) {
+                            case (0):
+                                // start a calibration task to continuously poll for data
+                                new CalibrationAsyncTask().execute(
+                                        // send a CALINBRATE message first
+                                        new CalibrationParameters(
+                                                "4",
+                                                sleeveSocket,
+                                                "192.168.23.1",
+                                                12347,
+                                                (TextView) findViewById(R.id.CalibrateButtonStatusText)
+                                        ),
+                                        // then send a CAL_STAGE_0 message
+                                        new CalibrationParameters(
+                                                "5",
+                                                sleeveSocket,
+                                                "192.168.23.1",
+                                                12347,
+                                                (TextView) findViewById(R.id.BicepFlexMinStatusText),
+                                                (TextView) findViewById(R.id.BicepFlexMaxStatusText)
+                                        ));
                                 v.setTag(1);
+                                calibrateBicepButton.setText("Finish Calibration");
                                 break;
-                            case 1:
-                                comParams.message = "5";
-                                new SharcComThread().execute(comParams);
-                                calibrateButton.setText("Start Shoulder Flex");
-                                v.setTag(2);
-                                break;
-                            case 2:
-                                comParams.message = "6";
-                                new SharcComThread().execute(comParams);
-                                calibrateButton.setText("Start Shoulder Rot Rest");
-                                v.setTag(3);
-                                break;
-                            case 3:
-                                comParams.message = "7";
-                                new SharcComThread().execute(comParams);
-                                calibrateButton.setText("Start Shoulder Rot F/B");
-                                v.setTag(4);
-                                break;
-                            case 4:
-                                comParams.message = "8";
-                                new SharcComThread().execute(comParams);
-                                calibrateButton.setText("Complete Calibration");
-                                v.setTag(5);
-                                break;
-                            case 5:
-                                comParams.message = "0"; // put sleeve in stopped state
-                                new SharcComThread().execute(comParams);
-                                calibrateButton.setText("Calibrate");
+                            case (1):
+                                // send stop message to stop polling and accept values
+                                new SharcComThread().execute(new ComParams(
+                                                "0",
+                                                sleeveSocket,
+                                                "192.168.23.1",
+                                                12347,
+                                                (TextView) findViewById(R.id.CalibrateButtonStatusText)
+                                        ),
+                                        new ComParams(
+                                                "1 5 " + ((TextView)findViewById(R.id.BicepFlexMinStatusText)).getText().toString() + " "
+                                                        + ((TextView)findViewById(R.id.BicepFlexMaxStatusText)).getText().toString(),
+                                                armSocket,
+                                                "192.168.23.19",
+                                                12346,
+                                                (TextView)findViewById(R.id.ArmStatusText)
+                                        )
+                                );
                                 v.setTag(0);
-                                break;
-                            default:
+                                calibrateBicepButton.setText("Calibrate Bicep");
                                 break;
                         }
                     }
                 }
         );
+        final Button calibrateShoulderFlexButton = (Button) findViewById(R.id.CalibrateShoulderFlexButton);
+
+        calibrateShoulderFlexButton.setTag(0);
+
+        calibrateShoulderFlexButton.setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+                        final int status = (Integer) v.getTag();
+                        switch (status) {
+                            case (0):
+                                // start a calibration task to continuously poll for data
+                                new CalibrationAsyncTask().execute(
+                                        // send a CALINBRATE message first
+                                        new CalibrationParameters(
+                                                "4",
+                                                sleeveSocket,
+                                                "192.168.23.1",
+                                                12347,
+                                                (TextView) findViewById(R.id.CalibrateButtonStatusText)
+                                        ),
+                                        // then send a CAL_STAGE_1 message
+                                        new CalibrationParameters(
+                                                "6",
+                                                sleeveSocket,
+                                                "192.168.23.1",
+                                                12347,
+                                                (TextView) findViewById(R.id.ShoulderFlexAtSideStatusText),
+                                                (TextView) findViewById(R.id.ShoulderFlexOutStatusText)
+                                        ));
+                                v.setTag(1);
+                                calibrateShoulderFlexButton.setText("Finish Calibration");
+                                break;
+                            case (1):
+                                // send stop message to stop polling and accept values
+                                new SharcComThread().execute(
+                                        new ComParams(
+                                                "0",
+                                                sleeveSocket,
+                                                "192.168.23.1",
+                                                12347,
+                                                (TextView) findViewById(+R.id.CalibrateButtonStatusText)
+                                        ),
+                                        new ComParams(
+                                                "1 6 " + ((TextView)findViewById(R.id.ShoulderFlexAtSideStatusText)).getText().toString() + " "
+                                                + ((TextView)findViewById(R.id.ShoulderFlexOutStatusText)).getText().toString(),
+                                                armSocket,
+                                                "192.168.23.19",
+                                                12346,
+                                                (TextView)findViewById(R.id.ArmStatusText)
+                                        )
+                                );
+                                v.setTag(0);
+                                calibrateShoulderFlexButton.setText("Calibrate Shoulder Flex");
+                                break;
+                        }
+                    }
+                }
+        );
+
+        final Button calibrateShoulderRotationButton = (Button) findViewById(R.id.CalibrateShoulderRotationButton);
+
+        calibrateShoulderRotationButton.setTag(0);
+
+        calibrateShoulderRotationButton.setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+                        final int status = (Integer) v.getTag();
+                        switch (status) {
+                            case (0):
+                                // start a calibration task to continuously poll for data
+                                new CalibrationAsyncTask().execute(
+                                        // send a CALIBRATE message first
+                                        new CalibrationParameters(
+                                                "4",
+                                                sleeveSocket,
+                                                "192.168.23.1",
+                                                12347,
+                                                (TextView) findViewById(R.id.CalibrateButtonStatusText)
+                                        ),
+                                        // then send a CAL_STAGE_2 message
+                                        new CalibrationParameters(
+                                                "7",
+                                                sleeveSocket,
+                                                "192.168.23.1",
+                                                12347,
+                                                (TextView) findViewById(R.id.ShoulderRotationFrontStatusText),
+                                                (TextView) findViewById(R.id.ShoulderRotationBackStatusText)
+                                        ));
+                                v.setTag(1);
+                                calibrateShoulderRotationButton.setText("Finish Calibration");
+                                break;
+                            case (1):
+                                // send stop message to stop polling and accept values
+                                new SharcComThread().execute(new ComParams(
+                                                "0",
+                                                sleeveSocket,
+                                                "192.168.23.1",
+                                                12347,
+                                                (TextView) findViewById(R.id.CalibrateButtonStatusText)
+                                        ),
+                                        new ComParams(
+                                                "1 7 " + ((TextView)findViewById(R.id.ShoulderRotationFrontStatusText)).getText().toString() + " "
+                                                        + ((TextView)findViewById(R.id.ShoulderRotationBackStatusText)).getText().toString(),
+                                                armSocket,
+                                                "192.168.23.19",
+                                                12346,
+                                                (TextView)findViewById(R.id.ArmStatusText)
+                                        )
+                                );
+                                v.setTag(0);
+                                calibrateShoulderRotationButton.setText("Calibrate Shoulder Rot.");
+                                break;
+                        }
+                    }
+                }
+        );
+
     }
 
     @Override
@@ -282,80 +356,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public class SharcComThread extends AsyncTask<ComParams, Void, ComParams> {
-
-        private static final String TAG = "sharcLog";
-
-        @Override
-        protected ComParams doInBackground(ComParams... params){
-            for(ComParams p : params) {
-                int serverPort = p.port;
-                String response = "No message";
-                DatagramPacket sendMessagePacket = null;
-                DatagramPacket recvMessagePacket = null;
-                //DatagramSocket udpSocket = null;
-
-                String messageStr = p.message;
-                String recvText;
-
-                InetAddress serverAddress;
-
-                int messageLength = messageStr.length();
-                byte[] message = messageStr.getBytes();
-                Log.i(TAG, "MAKE SURE YOU'RE ON SHARC WiFi");
-                try {
-                    Log.i(TAG, "getting address name of " + p.ipAddr);
-                    serverAddress = InetAddress.getByName(p.ipAddr);
-                    sendMessagePacket = new DatagramPacket(message, messageLength, serverAddress, serverPort);
-
-                } catch (UnknownHostException e) {
-                    Log.i(TAG, "failed to get host name");
-                }
-
-                byte[] recvBuffer = new byte[1500];
-                recvMessagePacket = new DatagramPacket(recvBuffer, recvBuffer.length);
-
-                try {
-                    Log.i(TAG, "sending data");
-                    p.udpSocket.send(sendMessagePacket);
-                    Log.i(TAG, "receiving data");
-                    p.udpSocket.receive(recvMessagePacket);
-                    recvText = new String(recvBuffer, 0, recvMessagePacket.getLength());
-                    Log.i(TAG, "received: " + recvText);
-                    p.response = recvText;
-                } catch (IOException e) {
-                    Log.i(TAG, "Message timed out or message send error");
-                    p.response = "Error: Message Timeout";
-                }
-            }
-            return params[0];
-        }
-
-        protected void onPostExecute(ComParams result){
-            TextView messageContent = result.statusTextView;
-            messageContent.setText(result.response);
-            return;
-        }
-    }
-
-    public class ComParams {
-        public DatagramSocket udpSocket; //socket to send message on
-        public String message;           // message code to send
-        public String ipAddr;            // ip address to send to
-        public int port;                 // destination port
-        public String response;          // response from server
-        public TextView statusTextView;  // text view to update
-
-        public ComParams(String m, DatagramSocket s, String ip, int p, TextView v) {
-            udpSocket = s;
-            message   = m;
-            ipAddr    = ip;
-            port      = p;
-            response  = "";
-            statusTextView = v;
-        }
     }
 }
 
