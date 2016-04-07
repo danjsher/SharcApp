@@ -11,9 +11,9 @@
         android:layout_height="wrap_content"
         android:text="@string/CalibrateBicepButtonText"
         android:id="@+id/CalibrateBicepButton"
+        android:layout_below="@+id/textView2"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="34dp" />
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,21 +28,14 @@
         android:layout_alignTop="@+id/CalibrateBicepButton"
         android:width="75dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/CalibrateButtonStatusText"
-        android:id="@+id/CalibrateButtonStatusText"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Calibrate Shoulder Flex"
         android:id="@+id/CalibrateShoulderFlexButton"
         android:layout_below="@+id/CalibrateBicepButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/CalibrateBicepButton"
         android:layout_alignEnd="@+id/CalibrateBicepButton" />
 
@@ -52,8 +45,8 @@
         android:text="Calibrate Shoulder Rot."
         android:id="@+id/CalibrateShoulderRotationButton"
         android:layout_below="@+id/CalibrateShoulderFlexButton"
-        android:layout_alignRight="@+id/CalibrateShoulderFlexButton"
-        android:layout_alignEnd="@+id/CalibrateShoulderFlexButton" />
+        android:layout_toLeftOf="@+id/ShoulderFlexAtSideStatusText"
+        android:layout_toStartOf="@+id/ShoulderFlexAtSideStatusText" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -148,5 +141,90 @@
         android:layout_above="@+id/ShoulderFlexOutStatusText"
         android:layout_toRightOf="@+id/ShoulderFlexOutStatusText"
         android:layout_toEndOf="@+id/ShoulderFlexOutStatusText" />
+
+    <Button
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:text="@string/live_button_text"
+        android:id="@+id/LiveButton"
+        android:layout_alignTop="@+id/StopButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:text="@string/stop_button_text"
+        android:id="@+id/StopButton"
+        android:layout_below="@+id/textView"
+        android:layout_alignLeft="@+id/RecordTimeField"
+        android:layout_alignStart="@+id/RecordTimeField" />
+
+    <EditText
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/RecordTimeField"
+        android:layout_below="@+id/StopButton"
+        android:layout_toRightOf="@+id/LiveButton"
+        android:layout_toEndOf="@+id/LiveButton"
+        android:text="@string/record_time_field_text"
+        android:gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:text="@string/record_button_text"
+        android:id="@+id/RecordButton"
+        android:layout_alignTop="@+id/RecordTimeField"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Main Controls"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Calibration"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/RecordButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="21dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/debug_text"
+        android:id="@+id/debugText"
+        android:layout_marginTop="23dp"
+        android:layout_below="@+id/CalibrateShoulderRotationButton"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_alignTop="@+id/debugText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Temps"
+        android:id="@+id/button2"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="36dp" />
 
 </RelativeLayout>

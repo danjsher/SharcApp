@@ -22,4 +22,10 @@
     <string name="ShoulderRotationFrontText">0.0</string>
     <string name="ShoulderRotationBackText">0.0</string>
     <string name="BicepFlexMaxText">0</string>
+    <string name="live_button_text">Live</string>
+    <string name="stop_button_text">Stop</string>
+    <string name="record_button_text">Record</string>
+    <string name="record_time_field_text">Record Time</string>
+    <string name="debug_text">DEBUG TEXT</string>
+    <string name="title_activity_temperature">TemperatureActivity</string>
 </resources>

@@ -42,119 +42,97 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
         }
 
+        // EditText instantiation
+
+        final EditText recordTimeText = (EditText) findViewById(R.id.RecordTimeField);
+
         // Button click handlers
-        final Button armStartButton = (Button)findViewById(R.id.ArmStartButton);
 
-        armStartButton.setOnClickListener(
+        final Button liveButton = (Button) findViewById(R.id.LiveButton);
+
+        liveButton.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         new SharcComThread().execute(
                                 new ComParams(
-                                        "2 1",
-                                        armSocket,
-                                        "192.168.23.19",
-                                        12346,
-                                        (TextView)findViewById(R.id.ArmStatusText)
-                                )
-                        );
-                    }
-                }
-        );
-
-        final Button armStopButton = (Button)findViewById(R.id.ArmStopButton);
-
-        armStopButton.setOnClickListener(
-                new Button.OnClickListener() {
-                    public void onClick(View v) {
-                        new SharcComThread().execute(
-                                new ComParams(
-                                        "2 0",
-                                        armSocket,
-                                        "192.168.23.19",
-                                        12346,
-                                        (TextView)findViewById(R.id.ArmStatusText)
-                                )
-                        );
-                    }
-                }
-        );
-
-        final Button sleeveLiveModeButton = (Button)findViewById(R.id.SleeveLiveModeButton);
-
-        sleeveLiveModeButton.setOnClickListener(
-                new Button.OnClickListener() {
-                    public void onClick(View v) {
-                        new SharcComThread().execute(
-                                new ComParams("1",
+                                        "1",
                                         sleeveSocket,
                                         "192.168.23.1",
                                         12347,
-                                        (TextView) findViewById(R.id.SleeveStatusText)
+                                        (TextView) findViewById(R.id.debugText)
                                 )
                         );
                     }
                 }
         );
 
-        final Button sleeveStopButton = (Button)findViewById(R.id.SleeveStopButton);
+        final Button stopButton = (Button) findViewById(R.id.StopButton);
 
-        sleeveStopButton.setOnClickListener(
+        stopButton.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         new SharcComThread().execute(
-                                new ComParams(
-                                        "0",
-                                        sleeveSocket,
-                                        "192.168.23.1",
-                                        12347,
-                                        (TextView)findViewById(R.id.SleeveStatusText)
-                                )
+                          new ComParams(
+                                  "0",
+                                  sleeveSocket,
+                                  "192.168.23.1",
+                                  12347,
+                                  (TextView) findViewById(R.id.debugText)
+                          )
                         );
                     }
                 }
         );
 
-        final Button sleeveRecordModeButton = (Button)findViewById(R.id.SleeveRecordModeButton);
+        final Button recordButton = (Button) findViewById(R.id.RecordButton);
 
-        // tag for switching between play and record
-        sleeveRecordModeButton.setTag(0);
+        recordButton.setTag(0);
 
-        sleeveRecordModeButton.setOnClickListener(
+        recordButton.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         final int status = (Integer) v.getTag();
-
-                        ComParams comParams = new ComParams("3",
-                                sleeveSocket,
-                                "192.168.23.1",
-                                12347,
-                                (TextView)findViewById(R.id.SleeveStatusText)
-                        );
-
-                        if(status == 0) {
-                            // get record time
-                            EditText recordTimeInput = (EditText)findViewById(R.id.RecordTimeInputText);
-                            TextView sleeveStatusText = (TextView)findViewById(R.id.SleeveStatusText);
-                            sleeveStatusText.setText(recordTimeInput.getText().toString());
-
-                            // set message code
-                            comParams.message = "2";
-
-                            // send record message
-                            new SharcComThread().execute(comParams);
-
-                            // change button to play
-                            sleeveRecordModeButton.setText("Play");
-                            v.setTag(1);
-                        } else if(status == 1) {
-                            // set message code
-                            comParams.message = "3";
-
-                            // send play message code
-                            new SharcComThread().execute(comParams);
-                            // change button back to record
-                            sleeveRecordModeButton.setText("Record");
-                            v.setTag(0);
+                        switch(status) {
+                            case 0:
+                                // send record message
+                                new SharcComThread().execute(
+                                    new ComParams(
+                                            "2",
+                                            sleeveSocket,
+                                            "192.168.23.1",
+                                            12347,
+                                            (TextView)findViewById(R.id.debugText)
+                                    )
+                                );
+                                recordButton.setText("Stop Recording");
+                                v.setTag(1);
+                                break;
+                            case 1:
+                                new SharcComThread().execute(
+                                        new ComParams(
+                                                "0",
+                                                sleeveSocket,
+                                                "192.168.23.1",
+                                                12347,
+                                                (TextView)findViewById(R.id.debugText)
+                                        )
+                                );
+                                recordButton.setText("Play");
+                                v.setTag(2);
+                                break;
+                            case 2:
+                                new SharcComThread().execute(
+                                        new ComParams(
+                                                "3",
+                                                sleeveSocket,
+                                                "192.168.23.1",
+                                                12347,
+                                                (TextView)findViewById(R.id.debugText)
+                                        )
+                                );
+                                recordButton.setText("Record");
+                                v.setTag(0);
+                                break;
                         }
                     }
                 }
@@ -178,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                                                 sleeveSocket,
                                                 "192.168.23.1",
                                                 12347,
-                                                (TextView) findViewById(R.id.CalibrateButtonStatusText)
+                                                (TextView) findViewById(R.id.debugText)
                                         ),
                                         // then send a CAL_STAGE_0 message
                                         new CalibrationParameters(
@@ -194,12 +172,13 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             case (1):
                                 // send stop message to stop polling and accept values
-                                new SharcComThread().execute(new ComParams(
+                                new SharcComThread().execute(
+                                        new ComParams(
                                                 "0",
                                                 sleeveSocket,
                                                 "192.168.23.1",
                                                 12347,
-                                                (TextView) findViewById(R.id.CalibrateButtonStatusText)
+                                                (TextView) findViewById(R.id.debugText)
                                         ),
                                         new ComParams(
                                                 "1 5 " + ((TextView)findViewById(R.id.BicepFlexMinStatusText)).getText().toString() + " "
@@ -207,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                                                 armSocket,
                                                 "192.168.23.19",
                                                 12346,
-                                                (TextView)findViewById(R.id.ArmStatusText)
+                                                (TextView)findViewById(R.id.debugText)
                                         )
                                 );
                                 v.setTag(0);
@@ -235,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                                                 sleeveSocket,
                                                 "192.168.23.1",
                                                 12347,
-                                                (TextView) findViewById(R.id.CalibrateButtonStatusText)
+                                                (TextView) findViewById(R.id.debugText)
                                         ),
                                         // then send a CAL_STAGE_1 message
                                         new CalibrationParameters(
@@ -257,15 +236,16 @@ public class MainActivity extends AppCompatActivity {
                                                 sleeveSocket,
                                                 "192.168.23.1",
                                                 12347,
-                                                (TextView) findViewById(+R.id.CalibrateButtonStatusText)
+                                                (TextView) findViewById(+R.id.debugText)
                                         ),
+                                        // message the arm server with the final values from the calibration
                                         new ComParams(
-                                                "1 6 " + ((TextView)findViewById(R.id.ShoulderFlexAtSideStatusText)).getText().toString() + " "
-                                                + ((TextView)findViewById(R.id.ShoulderFlexOutStatusText)).getText().toString(),
+                                                "1 6 " + ((TextView) findViewById(R.id.ShoulderFlexAtSideStatusText)).getText().toString() + " "
+                                                        + ((TextView) findViewById(R.id.ShoulderFlexOutStatusText)).getText().toString(),
                                                 armSocket,
                                                 "192.168.23.19",
                                                 12346,
-                                                (TextView)findViewById(R.id.ArmStatusText)
+                                                (TextView) findViewById(R.id.debugText)
                                         )
                                 );
                                 v.setTag(0);
@@ -294,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
                                                 sleeveSocket,
                                                 "192.168.23.1",
                                                 12347,
-                                                (TextView) findViewById(R.id.CalibrateButtonStatusText)
+                                                (TextView) findViewById(R.id.debugText)
                                         ),
                                         // then send a CAL_STAGE_2 message
                                         new CalibrationParameters(
@@ -310,20 +290,22 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             case (1):
                                 // send stop message to stop polling and accept values
-                                new SharcComThread().execute(new ComParams(
+                                new SharcComThread().execute(
+                                        new ComParams(
                                                 "0",
                                                 sleeveSocket,
                                                 "192.168.23.1",
                                                 12347,
-                                                (TextView) findViewById(R.id.CalibrateButtonStatusText)
+                                                (TextView) findViewById(R.id.debugText)
                                         ),
+                                        // send arm server calibration values
                                         new ComParams(
                                                 "1 7 " + ((TextView)findViewById(R.id.ShoulderRotationFrontStatusText)).getText().toString() + " "
                                                         + ((TextView)findViewById(R.id.ShoulderRotationBackStatusText)).getText().toString(),
                                                 armSocket,
                                                 "192.168.23.19",
                                                 12346,
-                                                (TextView)findViewById(R.id.ArmStatusText)
+                                                (TextView)findViewById(R.id.debugText)
                                         )
                                 );
                                 v.setTag(0);
