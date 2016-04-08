@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.DecimalFormat;
 
 /**
  * Created by dan on 4/6/2016.
@@ -96,18 +97,19 @@ public class CalibrationAsyncTask extends AsyncTask<CalibrationParameters, Void,
 
     private String[] parseResponse(String response, int offset){
         String[] split = response.split(" ");
-
+        DecimalFormat df = new DecimalFormat("#.#");
         String[] ret = new String[2];
         if(offset == 5) {
             ret[0] = split[0];
             ret[1] = split[1];
         } else if (offset == 6) {
-            ret[0] = split[2];
-            ret[1] = split[3];
+            ret[0] = df.format(Float.parseFloat(split[2]));
+            ret[1] = df.format(Float.parseFloat(split[3]));
         } else if (offset == 7) {
-            ret[0] = split[4];
-            ret[1] = split[5];
+            ret[0] = df.format(Float.parseFloat(split[4]));
+            ret[1] = df.format(Float.parseFloat(split[5]));
         }
         return ret;
     }
+
 }

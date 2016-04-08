@@ -28,4 +28,15 @@
     <string name="record_time_field_text">Record Time</string>
     <string name="debug_text">DEBUG TEXT</string>
     <string name="title_activity_temperature">TemperatureActivity</string>
+    <string name="view_temp_button_text">View Temps</string>
+    <string name="shoulder_rotation_temp_text">0.0</string>
+    <string name="shoulder_flex_temp_text">0.0</string>
+    <string name="bicep_flex_servo_temp_text">0.0</string>
+    <string name="bicep_rotation_servo_temp_text">0.0</string>
+    <string name="shoulder_rotation_circuit_temp_text">0.0</string>
+    <string name="shoulder_flex_circuit_temp_text">0.0</string>
+    <string name="bicep_flex_circuit_temp_text">0.0</string>
+    <string name="bicep_rotation_circuit_temp_text">0.0</string>
+    <string name="start_monitoring_button_text">Start Monitoring</string>
+    <string name="reset_button_text">Reset</string>
 </resources>

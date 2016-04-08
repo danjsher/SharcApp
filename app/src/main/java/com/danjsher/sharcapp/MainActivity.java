@@ -1,5 +1,6 @@
 package com.danjsher.sharcapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private DatagramSocket sleeveSocket = null;
     private String clientState = Constants.STOPPED;
     private String serverState = Constants.STOPPED;
+    int calibrated = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +44,30 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
         }
 
-        // EditText instantiation
+        // Initialize buttons
+        final Button liveButton = (Button) findViewById(R.id.LiveButton);
+        //liveButton.setEnabled(false);
 
-        final EditText recordTimeText = (EditText) findViewById(R.id.RecordTimeField);
+        final Button stopButton = (Button) findViewById(R.id.StopButton);
+
+        final Button recordButton = (Button) findViewById(R.id.RecordButton);
+        recordButton.setTag(0);
+        //recordButton.setEnabled(false);
+
+        final Button calibrateBicepButton = (Button) findViewById(R.id.CalibrateBicepButton);
+        calibrateBicepButton.setTag(0);
+
+        final Button calibrateShoulderFlexButton = (Button) findViewById(R.id.CalibrateShoulderFlexButton);
+        calibrateShoulderFlexButton.setTag(0);
+
+        final Button calibrateShoulderRotationButton = (Button) findViewById(R.id.CalibrateShoulderRotationButton);
+        calibrateShoulderRotationButton.setTag(0);
+
+        final Button viewTempButton = (Button) findViewById(R.id.viewTempButton);
+
+        final Button resetButton = (Button) findViewById(R.id.resetButton);
 
         // Button click handlers
-
-        final Button liveButton = (Button) findViewById(R.id.LiveButton);
-
         liveButton.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
@@ -66,43 +84,37 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-        final Button stopButton = (Button) findViewById(R.id.StopButton);
-
         stopButton.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         new SharcComThread().execute(
-                          new ComParams(
-                                  "0",
-                                  sleeveSocket,
-                                  "192.168.23.1",
-                                  12347,
-                                  (TextView) findViewById(R.id.debugText)
-                          )
+                                new ComParams(
+                                        "0",
+                                        sleeveSocket,
+                                        "192.168.23.1",
+                                        12347,
+                                        (TextView) findViewById(R.id.debugText)
+                                )
                         );
                     }
                 }
         );
 
-        final Button recordButton = (Button) findViewById(R.id.RecordButton);
-
-        recordButton.setTag(0);
-
         recordButton.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         final int status = (Integer) v.getTag();
-                        switch(status) {
+                        switch (status) {
                             case 0:
                                 // send record message
                                 new SharcComThread().execute(
-                                    new ComParams(
-                                            "2",
-                                            sleeveSocket,
-                                            "192.168.23.1",
-                                            12347,
-                                            (TextView)findViewById(R.id.debugText)
-                                    )
+                                        new ComParams(
+                                                "2",
+                                                sleeveSocket,
+                                                "192.168.23.1",
+                                                12347,
+                                                (TextView) findViewById(R.id.debugText)
+                                        )
                                 );
                                 recordButton.setText("Stop Recording");
                                 v.setTag(1);
@@ -114,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                                                 sleeveSocket,
                                                 "192.168.23.1",
                                                 12347,
-                                                (TextView)findViewById(R.id.debugText)
+                                                (TextView) findViewById(R.id.debugText)
                                         )
                                 );
                                 recordButton.setText("Play");
@@ -127,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                                                 sleeveSocket,
                                                 "192.168.23.1",
                                                 12347,
-                                                (TextView)findViewById(R.id.debugText)
+                                                (TextView) findViewById(R.id.debugText)
                                         )
                                 );
                                 recordButton.setText("Record");
@@ -138,16 +150,16 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-        final Button calibrateBicepButton = (Button) findViewById(R.id.CalibrateBicepButton);
-
-        calibrateBicepButton.setTag(0);
-
         calibrateBicepButton.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         final int status = (Integer) v.getTag();
                         switch (status) {
                             case (0):
+                                // disable other buttons
+                                calibrateShoulderFlexButton.setEnabled(false);
+                                calibrateShoulderRotationButton.setEnabled(false);
+
                                 // start a calibration task to continuously poll for data
                                 new CalibrationAsyncTask().execute(
                                         // send a CALINBRATE message first
@@ -181,24 +193,34 @@ public class MainActivity extends AppCompatActivity {
                                                 (TextView) findViewById(R.id.debugText)
                                         ),
                                         new ComParams(
-                                                "1 5 " + ((TextView)findViewById(R.id.BicepFlexMinStatusText)).getText().toString() + " "
-                                                        + ((TextView)findViewById(R.id.BicepFlexMaxStatusText)).getText().toString(),
+                                                "1 5 " + ((TextView) findViewById(R.id.BicepFlexMinStatusText)).getText().toString() + " "
+                                                        + ((TextView) findViewById(R.id.BicepFlexMaxStatusText)).getText().toString(),
                                                 armSocket,
                                                 "192.168.23.19",
                                                 12346,
-                                                (TextView)findViewById(R.id.debugText)
+                                                (TextView) findViewById(R.id.debugText)
                                         )
                                 );
                                 v.setTag(0);
                                 calibrateBicepButton.setText("Calibrate Bicep");
+
+                                // if calibration has been run, enable live and record buttons
+                                /*
+                                if(calibrated < 3) {
+                                    calibrated++;
+                                } else if (calibrated == 3) {
+                                    recordButton.setEnabled(true);
+                                    liveButton.setEnabled(true);
+                                }
+                                */
+                                // re-enable buttons
+                                calibrateShoulderFlexButton.setEnabled(true);
+                                calibrateShoulderRotationButton.setEnabled(true);
                                 break;
                         }
                     }
                 }
         );
-        final Button calibrateShoulderFlexButton = (Button) findViewById(R.id.CalibrateShoulderFlexButton);
-
-        calibrateShoulderFlexButton.setTag(0);
 
         calibrateShoulderFlexButton.setOnClickListener(
                 new Button.OnClickListener() {
@@ -206,6 +228,9 @@ public class MainActivity extends AppCompatActivity {
                         final int status = (Integer) v.getTag();
                         switch (status) {
                             case (0):
+                                // disable buttons so state can't be messed up
+                                calibrateBicepButton.setEnabled(false);
+                                calibrateShoulderRotationButton.setEnabled(false);
                                 // start a calibration task to continuously poll for data
                                 new CalibrationAsyncTask().execute(
                                         // send a CALINBRATE message first
@@ -250,15 +275,25 @@ public class MainActivity extends AppCompatActivity {
                                 );
                                 v.setTag(0);
                                 calibrateShoulderFlexButton.setText("Calibrate Shoulder Flex");
+
+                                // if calibration has been run, enable live and record buttons
+                                /*
+                                if(calibrated < 3) {
+                                    calibrated++;
+                                } else if (calibrated == 3) {
+                                    recordButton.setEnabled(true);
+                                    liveButton.setEnabled(true);
+                                }
+                                */
+
+                                // re-enable other buttons
+                                calibrateBicepButton.setEnabled(true);
+                                calibrateShoulderRotationButton.setEnabled(true);
                                 break;
                         }
                     }
                 }
         );
-
-        final Button calibrateShoulderRotationButton = (Button) findViewById(R.id.CalibrateShoulderRotationButton);
-
-        calibrateShoulderRotationButton.setTag(0);
 
         calibrateShoulderRotationButton.setOnClickListener(
                 new Button.OnClickListener() {
@@ -266,6 +301,10 @@ public class MainActivity extends AppCompatActivity {
                         final int status = (Integer) v.getTag();
                         switch (status) {
                             case (0):
+                                // disable other buttons
+                                calibrateBicepButton.setEnabled(false);
+                                calibrateShoulderFlexButton.setEnabled(false);
+
                                 // start a calibration task to continuously poll for data
                                 new CalibrationAsyncTask().execute(
                                         // send a CALIBRATE message first
@@ -310,8 +349,57 @@ public class MainActivity extends AppCompatActivity {
                                 );
                                 v.setTag(0);
                                 calibrateShoulderRotationButton.setText("Calibrate Shoulder Rot.");
+
+                                // if calibration has been run, enable live and record buttons
+                                /*
+                                if(calibrated < 3) {
+                                    calibrated++;
+                                } else if (calibrated == 3) {
+                                    recordButton.setEnabled(true);
+                                    liveButton.setEnabled(true);
+                                }
+                                */
+
+                                // re-enable other buttons
+                                calibrateBicepButton.setEnabled(true);
+                                calibrateShoulderFlexButton.setEnabled(true);
                                 break;
                         }
+                    }
+                }
+        );
+
+        viewTempButton.setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, TemperatureActivity.class);
+                        MainActivity.this.startActivity(intent);
+                    }
+                }
+        );
+
+
+
+        resetButton.setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+                        new SharcComThread().execute(
+                                new ComParams(
+                                        "8",
+                                        sleeveSocket,
+                                        "192.168.23.1",
+                                        12347,
+                                        (TextView) findViewById(R.id.debugText)
+                                )/*, reset not implemented on arm side yet
+                                new ComParams(
+                                        "8",
+                                        armSocket,
+                                        "192.168.23.19",
+                                        12346,
+                                        (TextView) findViewById(R.id.debugText);
+                                )
+                                */
+                        );
                     }
                 }
         );
