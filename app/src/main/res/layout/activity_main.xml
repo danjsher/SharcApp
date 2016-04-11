@@ -4,7 +4,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
-    android:padding="5dp">
+    android:padding="10dp">
 
     <Button
         android:layout_width="210dp"
@@ -162,9 +162,9 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Calibration"
         android:id="@+id/textView2"
-        android:layout_below="@+id/resetButton"
+        android:layout_below="@+id/StopButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp" />
+        android:paddingTop="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -172,10 +172,9 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/debug_text"
         android:id="@+id/debugText"
-        android:layout_alignRight="@+id/viewTempButton"
-        android:layout_alignEnd="@+id/viewTempButton"
+        android:gravity="center_horizontal"
         android:layout_above="@+id/viewTempButton"
-        android:gravity="center_horizontal" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -197,5 +196,39 @@
         android:padding="5dp"
         android:layout_alignRight="@+id/RecordButton"
         android:layout_alignEnd="@+id/RecordButton" />
+
+    <Button
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bicep_rotation_calibration_button_text"
+        android:id="@+id/bicepRotationCalibrationButton"
+        android:layout_below="@+id/CalibrateShoulderRotationButton"
+        android:layout_toLeftOf="@+id/ShoulderRotationFrontStatusText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/bicep_rotation_calibration_status_text"
+        android:id="@+id/bicepRotationInCalibrationStatusText"
+        android:layout_alignTop="@+id/bicepRotationCalibrationButton"
+        android:layout_toRightOf="@+id/bicepRotationCalibrationButton"
+        android:layout_alignRight="@+id/ShoulderRotationFrontStatusText"
+        android:layout_alignEnd="@+id/ShoulderRotationFrontStatusText"
+        android:layout_alignBottom="@+id/bicepRotationCalibrationButton"
+        android:gravity="center_vertical|center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/bicep_rotation_back_calibration_status_text"
+        android:id="@+id/bicepRotationBackCalibrationStatusText"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_below="@+id/ShoulderRotationFrontStatusText"
+        android:layout_toRightOf="@+id/ShoulderRotationFrontStatusText"
+        android:layout_alignBottom="@+id/bicepRotationInCalibrationStatusText"
+        android:layout_alignRight="@+id/ShoulderRotationBackStatusText"
+        android:layout_alignEnd="@+id/ShoulderRotationBackStatusText" />
 
 </RelativeLayout>

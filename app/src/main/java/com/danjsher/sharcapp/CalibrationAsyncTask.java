@@ -108,6 +108,9 @@ public class CalibrationAsyncTask extends AsyncTask<CalibrationParameters, Void,
         } else if (offset == 7) {
             ret[0] = df.format(Float.parseFloat(split[4]));
             ret[1] = df.format(Float.parseFloat(split[5]));
+        } else if (offset == 8) {
+            ret[0] = df.format(Float.parseFloat(split[6]));
+            ret[1] = df.format(Float.parseFloat(split[7]));
         }
         return ret;
     }

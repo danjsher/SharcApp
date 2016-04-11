@@ -39,4 +39,7 @@
     <string name="bicep_rotation_circuit_temp_text">0.0</string>
     <string name="start_monitoring_button_text">Start Monitoring</string>
     <string name="reset_button_text">Reset</string>
+    <string name="bicep_rotation_calibration_button_text">Calibrate Bicep Rot.</string>
+    <string name="bicep_rotation_calibration_status_text">0.0</string>
+    <string name="bicep_rotation_back_calibration_status_text">0.0</string>
 </resources>
