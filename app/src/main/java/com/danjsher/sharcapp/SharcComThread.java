@@ -2,6 +2,7 @@ package com.danjsher.sharcapp;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -12,6 +13,22 @@ import java.net.UnknownHostException;
 public class SharcComThread extends AsyncTask<ComParams, Void, ComParams> {
 
     private static final String TAG = "sharcLog";
+    private Button buttonPressed = null;
+
+    public SharcComThread(Button bp) {
+        buttonPressed = bp;
+    }
+
+    public SharcComThread(){
+        super();
+    }
+    @Override
+    protected void onPreExecute() {
+        // if a button was provided, disable it until work is done
+        if(buttonPressed != null) {
+            buttonPressed.setEnabled(false);
+        }
+    }
 
     @Override
     protected ComParams doInBackground(ComParams... params){
@@ -61,6 +78,10 @@ public class SharcComThread extends AsyncTask<ComParams, Void, ComParams> {
     protected void onPostExecute(ComParams result){
         TextView messageContent = result.statusTextView;
         messageContent.setText(result.response);
+        // enable button once message has been received
+        if(buttonPressed != null) {
+            buttonPressed.setEnabled(true);
+        }
         return;
     }
 }

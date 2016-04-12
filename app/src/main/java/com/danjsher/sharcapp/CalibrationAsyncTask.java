@@ -1,6 +1,7 @@
 package com.danjsher.sharcapp;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 import android.os.Handler;
 
@@ -10,13 +11,18 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 
-/**
- * Created by dan on 4/6/2016.
- */
 public class CalibrationAsyncTask extends AsyncTask<CalibrationParameters, Void, CalibrationParameters> {
 
     private static final String TAG = "sharcLog";
 
+    public CalibrationAsyncTask() {
+        super();
+    }
+
+    @Override
+    protected void onPreExecute() {
+
+    }
     @Override
     protected CalibrationParameters doInBackground(CalibrationParameters... params) {
         for(CalibrationParameters p : params) {
@@ -74,7 +80,9 @@ public class CalibrationAsyncTask extends AsyncTask<CalibrationParameters, Void,
     protected void onPostExecute(final CalibrationParameters result) {
         int waitTime = 250;
 
-        if(result.response.equals("STOPPED")) {
+        // received stop message or timed out
+        if(result.response.equals("STOPPED")
+                || result.response.equals("Error: Message Timeout")) {
             Log.i(TAG, "Stopping task");
         } else {
             String[] numbers = parseResponse(result.response, Integer.parseInt(result.message));
@@ -89,10 +97,11 @@ public class CalibrationAsyncTask extends AsyncTask<CalibrationParameters, Void,
                     new CalibrationAsyncTask().execute(result);
                 }
             };
-
             Handler h = new Handler();
             h.postDelayed(r, waitTime);
         }
+
+
     }
 
     private String[] parseResponse(String response, int offset){

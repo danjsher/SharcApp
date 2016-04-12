@@ -22,7 +22,7 @@ public class TemperatureActivity extends AppCompatActivity {
                 armSocket = new DatagramSocket(12348);
                 armSocket.setReuseAddress(true);
                 // set ten second time out on socket
-                armSocket.setSoTimeout(10000);
+                armSocket.setSoTimeout(5000);
             }
         } catch (Exception e) {
 

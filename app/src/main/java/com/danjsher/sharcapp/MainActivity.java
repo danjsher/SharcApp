@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
                 armSocket = new DatagramSocket(12346);
                 armSocket.setReuseAddress(true);
                 // set ten second time out on socket
-                armSocket.setSoTimeout(10000);
+                armSocket.setSoTimeout(5000);
 
             }
 
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                 sleeveSocket = new DatagramSocket(12347);
                 sleeveSocket.setReuseAddress(true);
                 // set ten second time out on socket
-                sleeveSocket.setSoTimeout(10000);
+                sleeveSocket.setSoTimeout(5000);
             }
         } catch (Exception e) {
         }
@@ -69,14 +69,12 @@ public class MainActivity extends AppCompatActivity {
         calibrateBicepRotationButton.setTag(0);
 
         final Button resetButton = (Button) findViewById(R.id.resetButton);
-
-
-
+        
         // Button click handlers
         liveButton.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        new SharcComThread().execute(
+                        new SharcComThread((Button)v).execute(
                                 new ComParams(
                                         "1",
                                         sleeveSocket,
@@ -92,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         stopButton.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        new SharcComThread().execute(
+                        new SharcComThread((Button)v).execute(
                                 new ComParams(
                                         "0",
                                         sleeveSocket,
@@ -112,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                         switch (status) {
                             case 0:
                                 // send record message
-                                new SharcComThread().execute(
+                                new SharcComThread((Button)v).execute(
                                         new ComParams(
                                                 "2",
                                                 sleeveSocket,
@@ -125,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                                 v.setTag(1);
                                 break;
                             case 1:
-                                new SharcComThread().execute(
+                                new SharcComThread((Button)v).execute(
                                         new ComParams(
                                                 "0",
                                                 sleeveSocket,
@@ -138,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                                 v.setTag(2);
                                 break;
                             case 2:
-                                new SharcComThread().execute(
+                                new SharcComThread((Button)v).execute(
                                         new ComParams(
                                                 "3",
                                                 sleeveSocket,
@@ -164,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
                                 // disable other buttons
                                 calibrateShoulderFlexButton.setEnabled(false);
                                 calibrateShoulderRotationButton.setEnabled(false);
+                                calibrateBicepRotationButton.setEnabled(false);
 
                                 // start a calibration task to continuously poll for data
                                 new CalibrationAsyncTask().execute(
@@ -213,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
                                 // re-enable buttons
                                 calibrateShoulderFlexButton.setEnabled(true);
                                 calibrateShoulderRotationButton.setEnabled(true);
+                                calibrateBicepRotationButton.setEnabled(true);
                                 break;
                         }
                     }
@@ -229,6 +229,8 @@ public class MainActivity extends AppCompatActivity {
                                 // disable buttons so state can't be messed up
                                 calibrateBicepButton.setEnabled(false);
                                 calibrateShoulderRotationButton.setEnabled(false);
+                                calibrateBicepRotationButton.setEnabled(false);
+
                                 // start a calibration task to continuously poll for data
                                 new CalibrationAsyncTask().execute(
                                         // send a CALINBRATE message first
@@ -277,6 +279,7 @@ public class MainActivity extends AppCompatActivity {
                                 // re-enable other buttons
                                 calibrateBicepButton.setEnabled(true);
                                 calibrateShoulderRotationButton.setEnabled(true);
+                                calibrateBicepRotationButton.setEnabled(true);
                                 break;
                         }
                     }
@@ -292,6 +295,7 @@ public class MainActivity extends AppCompatActivity {
                                 // disable other buttons
                                 calibrateBicepButton.setEnabled(false);
                                 calibrateShoulderFlexButton.setEnabled(false);
+                                calibrateBicepRotationButton.setEnabled(false);
 
                                 // start a calibration task to continuously poll for data
                                 new CalibrationAsyncTask().execute(
@@ -341,6 +345,7 @@ public class MainActivity extends AppCompatActivity {
                                 // re-enable other buttons
                                 calibrateBicepButton.setEnabled(true);
                                 calibrateShoulderFlexButton.setEnabled(true);
+                                calibrateBicepRotationButton.setEnabled(true);
                                 break;
                         }
                     }
@@ -401,7 +406,7 @@ public class MainActivity extends AppCompatActivity {
                                         )
                                 );
                                 v.setTag(0);
-                                calibrateShoulderRotationButton.setText("Calibrate Bicep Rot.");
+                                calibrateBicepRotationButton.setText("Calibrate Bicep Rot.");
 
                                 // re-enable other buttons
                                 calibrateBicepButton.setEnabled(true);
@@ -416,7 +421,7 @@ public class MainActivity extends AppCompatActivity {
         resetButton.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        new SharcComThread().execute(
+                        new SharcComThread((Button)v).execute(
                                 new ComParams(
                                         "9",
                                         sleeveSocket,

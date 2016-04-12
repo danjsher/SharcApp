@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.DecimalFormat;
 
 public class TemperatureAsyncTask extends AsyncTask<CalibrationParameters, Void, CalibrationParameters> {
 
@@ -67,11 +68,13 @@ public class TemperatureAsyncTask extends AsyncTask<CalibrationParameters, Void,
         if(result.response.equals("Error: Message Timeout")) {
             Log.i(TAG, "Message Time out, exiting thread");
         } else {
-
+            // only keep one digit
+            DecimalFormat df = new DecimalFormat("#.#");
+            // loop through each result and assign it to textview
             int i = 0;
             String split[] = result.response.split(" ");
             for (TextView v : result.statusTextView) {
-                v.setText(split[i++]);
+                v.setText(df.format(Float.parseFloat(split[i++])));
             }
         }
         Log.i(TAG, "Running temp task again");
