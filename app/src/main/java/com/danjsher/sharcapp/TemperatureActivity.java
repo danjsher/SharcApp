@@ -9,40 +9,41 @@ import android.widget.TextView;
 import java.net.DatagramSocket;
 
 public class TemperatureActivity extends AppCompatActivity {
-    private DatagramSocket armSocket = null;
+    private static DatagramSocket armSocket = null;
+    private TemperatureAsyncTask mTempTask = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temperature);
 
-        // Button Click Handlers
+        // create socket for communicating with sharc arm
+        try {
+            if(armSocket == null) {
+                armSocket = new DatagramSocket(12348);
+                armSocket.setReuseAddress(true);
+                // set ten second time out on socket
+                armSocket.setSoTimeout(10000);
+            }
+        } catch (Exception e) {
 
-        Button startMonitoringButton = (Button) findViewById(R.id.startMonitoringButton);
-
-        startMonitoringButton.setOnClickListener(
-                new Button.OnClickListener() {
-                    public void onClick(View v) {
-                        new CalibrationAsyncTask().execute(
-                                new CalibrationParameters(
-                                        "",
-                                        armSocket,
-                                        "192.168.23.19",
-                                        12346,
-                                        (TextView) findViewById(R.id.shoulderRotationServoTempText),
-                                        (TextView) findViewById(R.id.shoulderFlexServoTempText),
-                                        (TextView) findViewById(R.id.bicepFlexServoTempText),
-                                        (TextView) findViewById(R.id.bicepRotationServoTempText),
-                                        (TextView) findViewById(R.id.shoulderRotationCircuitTempText),
-                                        (TextView) findViewById(R.id.shoulderFlexCircuitTempText),
-                                        (TextView) findViewById(R.id.bicepFlexCircuitTempText),
-                                        (TextView) findViewById(R.id.bicepRotationCircuitTempText)
-                                 )
-                        );
-                    }
-                }
-        );
+        }
+        //spawn polling for temp
+        if(mTempTask == null) {
+            mTempTask = new TemperatureAsyncTask();
+            mTempTask.execute(new CalibrationParameters(
+                    "3",
+                    armSocket,
+                    "192.168.23.19",
+                    12346,
+                    (TextView) findViewById(R.id.shoulderRotationServoTempText),
+                    (TextView) findViewById(R.id.shoulderFlexServoTempText),
+                    (TextView) findViewById(R.id.bicepFlexServoTempText),
+                    (TextView) findViewById(R.id.bicepRotationServoTempText),
+                    (TextView) findViewById(R.id.shoulderRotationCircuitTempText),
+                    (TextView) findViewById(R.id.shoulderFlexCircuitTempText),
+                    (TextView) findViewById(R.id.bicepFlexCircuitTempText),
+                    (TextView) findViewById(R.id.bicepRotationCircuitTempText)
+            ));
+        }
     }
-
-
-
 }

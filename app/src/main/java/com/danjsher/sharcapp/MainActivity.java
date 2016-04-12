@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -25,15 +26,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
         // create socket for communicating with sharc arm
         try {
             if(armSocket == null) {
+
                 armSocket = new DatagramSocket(12346);
                 armSocket.setReuseAddress(true);
                 // set ten second time out on socket
                 armSocket.setSoTimeout(10000);
+
             }
 
             if ( sleeveSocket == null ) {
@@ -66,8 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
         final Button calibrateBicepRotationButton = (Button) findViewById(R.id.bicepRotationCalibrationButton);
         calibrateBicepRotationButton.setTag(0);
-
-        final Button viewTempButton = (Button) findViewById(R.id.viewTempButton);
 
         final Button resetButton = (Button) findViewById(R.id.resetButton);
 
@@ -210,15 +209,7 @@ public class MainActivity extends AppCompatActivity {
                                 v.setTag(0);
                                 calibrateBicepButton.setText("Calibrate Bicep");
 
-                                // if calibration has been run, enable live and record buttons
-                                /*
-                                if(calibrated < 3) {
-                                    calibrated++;
-                                } else if (calibrated == 3) {
-                                    recordButton.setEnabled(true);
-                                    liveButton.setEnabled(true);
-                                }
-                                */
+
                                 // re-enable buttons
                                 calibrateShoulderFlexButton.setEnabled(true);
                                 calibrateShoulderRotationButton.setEnabled(true);
@@ -226,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+
         );
 
         calibrateShoulderFlexButton.setOnClickListener(
@@ -281,16 +273,6 @@ public class MainActivity extends AppCompatActivity {
                                 );
                                 v.setTag(0);
                                 calibrateShoulderFlexButton.setText("Calibrate Shoulder Flex");
-
-                                // if calibration has been run, enable live and record buttons
-                                /*
-                                if(calibrated < 3) {
-                                    calibrated++;
-                                } else if (calibrated == 3) {
-                                    recordButton.setEnabled(true);
-                                    liveButton.setEnabled(true);
-                                }
-                                */
 
                                 // re-enable other buttons
                                 calibrateBicepButton.setEnabled(true);
@@ -356,16 +338,6 @@ public class MainActivity extends AppCompatActivity {
                                 v.setTag(0);
                                 calibrateShoulderRotationButton.setText("Calibrate Shoulder Rot.");
 
-                                // if calibration has been run, enable live and record buttons
-                                /*
-                                if(calibrated < 3) {
-                                    calibrated++;
-                                } else if (calibrated == 3) {
-                                    recordButton.setEnabled(true);
-                                    liveButton.setEnabled(true);
-                                }
-                                */
-
                                 // re-enable other buttons
                                 calibrateBicepButton.setEnabled(true);
                                 calibrateShoulderFlexButton.setEnabled(true);
@@ -406,7 +378,7 @@ public class MainActivity extends AppCompatActivity {
                                                 (TextView) findViewById(R.id.bicepRotationBackCalibrationStatusText)
                                         ));
                                 v.setTag(1);
-                                calibrateShoulderRotationButton.setText("Finish Calibration");
+                                calibrateBicepRotationButton.setText("Finish Calibration");
                                 break;
                             case (1):
                                 // send stop message to stop polling and accept values
@@ -431,16 +403,6 @@ public class MainActivity extends AppCompatActivity {
                                 v.setTag(0);
                                 calibrateShoulderRotationButton.setText("Calibrate Bicep Rot.");
 
-                                // if calibration has been run, enable live and record buttons
-                                /*
-                                if(calibrated < 3) {
-                                    calibrated++;
-                                } else if (calibrated == 3) {
-                                    recordButton.setEnabled(true);
-                                    liveButton.setEnabled(true);
-                                }
-                                */
-
                                 // re-enable other buttons
                                 calibrateBicepButton.setEnabled(true);
                                 calibrateShoulderFlexButton.setEnabled(true);
@@ -450,17 +412,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
-
-        viewTempButton.setOnClickListener(
-                new Button.OnClickListener() {
-                    public void onClick(View v) {
-                        Intent intent = new Intent(MainActivity.this, TemperatureActivity.class);
-                        MainActivity.this.startActivity(intent);
-                    }
-                }
-        );
-
-
 
         resetButton.setOnClickListener(
                 new Button.OnClickListener() {
@@ -472,16 +423,20 @@ public class MainActivity extends AppCompatActivity {
                                         "192.168.23.1",
                                         12347,
                                         (TextView) findViewById(R.id.debugText)
-                                )/*, reset not implemented on arm side yet
-                                new ComParams(
-                                        "8",
-                                        armSocket,
-                                        "192.168.23.19",
-                                        12346,
-                                        (TextView) findViewById(R.id.debugText);
                                 )
-                                */
                         );
+                    }
+                }
+        );
+
+        final Button viewTempButton = (Button) findViewById(R.id.viewTempButton);
+
+
+        viewTempButton.setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, TemperatureActivity.class);
+                        MainActivity.this.startActivity(intent);
                     }
                 }
         );

@@ -18,14 +18,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/start_monitoring_button_text"
-        android:id="@+id/startMonitoringButton"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
     <GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
