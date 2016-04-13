@@ -68,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
         final Button calibrateBicepRotationButton = (Button) findViewById(R.id.bicepRotationCalibrationButton);
         calibrateBicepRotationButton.setTag(0);
 
+        final Button calibrateYawButton = (Button) findViewById(R.id.calibrateYawButton);
+        calibrateYawButton.setTag(0);
+
         final Button resetButton = (Button) findViewById(R.id.resetButton);
 
         // Button click handlers
@@ -418,12 +421,80 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
+        calibrateYawButton.setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+                        final int status = (Integer) v.getTag();
+                        switch (status) {
+                            case (0):
+                                // disable other buttons
+                                calibrateBicepButton.setEnabled(false);
+                                calibrateShoulderFlexButton.setEnabled(false);
+                                calibrateShoulderRotationButton.setEnabled(false);
+                                calibrateBicepRotationButton.setEnabled(false);
+
+                                // start a calibration task to continuously poll for data
+                                new CalibrationAsyncTask().execute(
+                                        // send a CALIBRATE message first
+                                        new CalibrationParameters(
+                                                "4",
+                                                sleeveSocket,
+                                                "192.168.23.1",
+                                                12347,
+                                                (TextView) findViewById(R.id.debugText)
+                                        ),
+                                        // then send a CAL_STAGE_2 message
+                                        new CalibrationParameters(
+                                                "9",
+                                                sleeveSocket,
+                                                "192.168.23.1",
+                                                12347,
+                                                (TextView) findViewById(R.id.calibrateYawBicepStatusText),
+                                                (TextView) findViewById(R.id.calibrateYawWristStatusText)
+                                        ));
+                                v.setTag(1);
+                                calibrateYawButton.setText("Finish Calibration");
+                                break;
+                            case (1):
+                                // send stop message to stop polling and accept values
+                                new SharcComThread().execute(
+                                        new ComParams(
+                                                "0",
+                                                sleeveSocket,
+                                                "192.168.23.1",
+                                                12347,
+                                                (TextView) findViewById(R.id.debugText)
+                                        ),
+                                        // send arm server calibration values
+                                        new ComParams(
+                                                "1 9 " + ((TextView)findViewById(R.id.calibrateYawBicepStatusText)).getText().toString() + " "
+                                                        + ((TextView)findViewById(R.id.calibrateYawWristStatusText)).getText().toString(),
+                                                armSocket,
+                                                "192.168.23.19",
+                                                12346,
+                                                (TextView)findViewById(R.id.debugText)
+                                        )
+                                );
+                                v.setTag(0);
+                                calibrateYawButton.setText("Calibrate Yaw");
+
+                                // re-enable other buttons
+                                calibrateBicepButton.setEnabled(true);
+                                calibrateShoulderFlexButton.setEnabled(true);
+                                calibrateShoulderRotationButton.setEnabled(true);
+                                calibrateBicepRotationButton.setEnabled(true);
+                                break;
+                        }
+                    }
+                }
+        );
+
         resetButton.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         new SharcComThread((Button)v).execute(
                                 new ComParams(
-                                        "9",
+                                        "10",
                                         sleeveSocket,
                                         "192.168.23.1",
                                         12347,

@@ -42,4 +42,7 @@
     <string name="bicep_rotation_calibration_button_text">Calibrate Bicep Rot.</string>
     <string name="bicep_rotation_calibration_status_text">0.0</string>
     <string name="bicep_rotation_back_calibration_status_text">0.0</string>
+    <string name="calibrate_yaw_button_text">Calibrate Yaw</string>
+    <string name="calibrate_yaw_bicep_status_text">0.0</string>
+    <string name="calibrate_yaw_wrist_status_text">0.0</string>
 </resources>
