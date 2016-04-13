@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         calibrateBicepRotationButton.setTag(0);
 
         final Button resetButton = (Button) findViewById(R.id.resetButton);
-        
+
         // Button click handlers
         liveButton.setOnClickListener(
                 new Button.OnClickListener() {
