@@ -23,7 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView3"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:id="@+id/gridLayout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -189,4 +190,68 @@
             android:layout_column="1"
             android:gravity="center_horizontal" />
     </GridLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Finger Tips"
+        android:id="@+id/textView8"
+        android:layout_below="@+id/gridLayout"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/thumb_finger_tip_adc_value"
+        android:id="@+id/thumbFingerAdcValue"
+        android:padding="15dp"
+        android:layout_below="@+id/textView8"
+        android:layout_toLeftOf="@+id/textView8"
+        android:layout_toStartOf="@+id/textView8" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/index_finger_tip_adc_value"
+        android:id="@+id/indexFingerTipAdcValue"
+        android:layout_alignTop="@+id/thumbFingerAdcValue"
+        android:layout_toRightOf="@+id/thumbFingerAdcValue"
+        android:layout_toEndOf="@+id/thumbFingerAdcValue"
+        android:padding="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/middle_finger_tip_adc_value"
+        android:id="@+id/middleFingerTipAdcValue"
+        android:layout_alignBottom="@+id/thumbFingerAdcValue"
+        android:layout_toRightOf="@+id/indexFingerTipAdcValue"
+        android:layout_toEndOf="@+id/indexFingerTipAdcValue"
+        android:padding="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/ring_finger_tip_adc_value"
+        android:id="@+id/ringFingerTipAdcValue"
+        android:layout_below="@+id/textView8"
+        android:layout_toRightOf="@+id/middleFingerTipAdcValue"
+        android:layout_toEndOf="@+id/middleFingerTipAdcValue"
+        android:padding="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/pinky_finger_tip_adc_value"
+        android:id="@+id/pinkyFingerTipAdcValue"
+        android:layout_below="@+id/textView8"
+        android:layout_toRightOf="@+id/ringFingerTipAdcValue"
+        android:layout_toEndOf="@+id/ringFingerTipAdcValue"
+        android:padding="15dp" />
 </RelativeLayout>

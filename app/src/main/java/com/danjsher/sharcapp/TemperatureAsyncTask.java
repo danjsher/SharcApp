@@ -64,7 +64,7 @@ public class TemperatureAsyncTask extends AsyncTask<CalibrationParameters, Void,
 
     @Override
     protected void onPostExecute(final CalibrationParameters result) {
-        int waitTime = 1000;
+        int waitTime = 250;
         if(result.response.equals("Error: Message Timeout")) {
             Log.i(TAG, "Message Time out, exiting thread");
         } else {

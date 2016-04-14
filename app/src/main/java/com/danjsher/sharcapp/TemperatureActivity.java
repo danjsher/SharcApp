@@ -42,7 +42,12 @@ public class TemperatureActivity extends AppCompatActivity {
                     (TextView) findViewById(R.id.shoulderRotationCircuitTempText),
                     (TextView) findViewById(R.id.shoulderFlexCircuitTempText),
                     (TextView) findViewById(R.id.bicepFlexCircuitTempText),
-                    (TextView) findViewById(R.id.bicepRotationCircuitTempText)
+                    (TextView) findViewById(R.id.bicepRotationCircuitTempText),
+                    (TextView) findViewById(R.id.thumbFingerAdcValue),
+                    (TextView) findViewById(R.id.indexFingerTipAdcValue),
+                    (TextView) findViewById(R.id.middleFingerTipAdcValue),
+                    (TextView) findViewById(R.id.ringFingerTipAdcValue),
+                    (TextView) findViewById(R.id.pinkyFingerTipAdcValue)
             ));
         }
     }
