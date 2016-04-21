@@ -2,7 +2,9 @@ package com.danjsher.sharcapp;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -14,9 +16,14 @@ public class SharcComThread extends AsyncTask<ComParams, Void, ComParams> {
 
     private static final String TAG = "sharcLog";
     private Button buttonPressed = null;
+    private static RecordActivity mRecActivity;
 
     public SharcComThread(Button bp) {
         buttonPressed = bp;
+    }
+
+    public SharcComThread(RecordActivity ra) {
+        mRecActivity = ra;
     }
 
     public SharcComThread(){
@@ -76,8 +83,16 @@ public class SharcComThread extends AsyncTask<ComParams, Void, ComParams> {
     }
 
     protected void onPostExecute(ComParams result){
-        TextView messageContent = result.statusTextView;
-        messageContent.setText(result.response);
+        if(result.statusTextView != null && !result.message.equals("2")) {
+            TextView messageContent = (TextView)result.statusTextView;
+            messageContent.setText(result.response);
+        } else if ( result.message.equals("11")){
+            Log.i(TAG, "Setting up list");
+            String[] fileNames = result.response.split(" ");
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(mRecActivity, R.layout.list_items, fileNames);
+            result.mListView.setAdapter(adapter);
+        }
+
         // enable button once message has been received
         if(buttonPressed != null) {
             buttonPressed.setEnabled(true);

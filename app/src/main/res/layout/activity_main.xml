@@ -11,11 +11,11 @@
         android:layout_height="wrap_content"
         android:text="@string/CalibrateBicepButtonText"
         android:id="@+id/CalibrateBicepButton"
-        android:layout_below="@+id/textView2"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/CalibrateShoulderRotationButton"
-        android:layout_alignEnd="@+id/CalibrateShoulderRotationButton" />
+        android:layout_alignEnd="@+id/CalibrateShoulderRotationButton"
+        android:layout_below="@+id/viewTempButton" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -114,38 +114,24 @@
         android:gravity="center_vertical|center_horizontal" />
 
     <Button
-        android:layout_width="175dp"
+        android:layout_width="182dp"
         android:layout_height="wrap_content"
         android:text="@string/live_button_text"
         android:id="@+id/LiveButton"
+        android:padding="5dp"
         android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/RecordButton"
-        android:layout_toStartOf="@+id/RecordButton"
-        android:padding="5dp" />
+        android:layout_alignParentStart="true" />
 
     <Button
-        android:layout_width="175dp"
+        android:layout_width="182dp"
         android:layout_height="wrap_content"
         android:text="@string/stop_button_text"
         android:id="@+id/StopButton"
-        android:layout_below="@+id/LiveButton"
-        android:layout_alignRight="@+id/LiveButton"
-        android:layout_alignEnd="@+id/LiveButton"
         android:padding="5dp"
-        android:layout_alignLeft="@+id/LiveButton"
-        android:layout_alignStart="@+id/LiveButton" />
-
-    <Button
-        android:layout_width="175dp"
-        android:layout_height="wrap_content"
-        android:text="@string/record_button_text"
-        android:id="@+id/RecordButton"
-        android:layout_alignTop="@+id/LiveButton"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:padding="5dp" />
+        android:layout_above="@+id/resetButton"
+        android:layout_toRightOf="@+id/LiveButton"
+        android:layout_toEndOf="@+id/LiveButton" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -159,44 +145,31 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Calibration"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/StopButton"
-        android:layout_centerHorizontal="true"
-        android:paddingTop="10dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/debug_text"
         android:id="@+id/debugText"
         android:gravity="center_horizontal"
-        android:layout_above="@+id/viewTempButton"
-        android:layout_alignRight="@+id/viewTempButton"
-        android:layout_alignEnd="@+id/viewTempButton" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="125dp"
         android:layout_height="wrap_content"
         android:text="@string/view_temp_button_text"
         android:id="@+id/viewTempButton"
-        android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_alignStart="@+id/textView2" />
+        android:layout_below="@+id/StopButton"
+        android:layout_toRightOf="@+id/recordModeButton"
+        android:layout_toEndOf="@+id/recordModeButton" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="125dp"
         android:layout_height="wrap_content"
         android:text="@string/reset_button_text"
         android:id="@+id/resetButton"
-        android:layout_below="@+id/RecordButton"
-        android:layout_alignLeft="@+id/RecordButton"
-        android:layout_alignStart="@+id/RecordButton"
         android:padding="5dp"
-        android:layout_alignRight="@+id/RecordButton"
-        android:layout_alignEnd="@+id/RecordButton" />
+        android:layout_below="@+id/LiveButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="210dp"
@@ -269,5 +242,14 @@
         android:layout_alignBottom="@+id/calibrateYawBicepStatusText"
         android:layout_alignLeft="@+id/bicepRotationBackCalibrationStatusText"
         android:layout_alignStart="@+id/bicepRotationBackCalibrationStatusText" />
+
+    <Button
+        android:layout_width="125dp"
+        android:layout_height="wrap_content"
+        android:text="@string/record_mode_button_text"
+        android:id="@+id/recordModeButton"
+        android:layout_below="@+id/LiveButton"
+        android:layout_toRightOf="@+id/resetButton"
+        android:layout_toEndOf="@+id/resetButton" />
 
 </RelativeLayout>

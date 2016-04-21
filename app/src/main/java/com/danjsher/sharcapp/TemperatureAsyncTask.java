@@ -66,7 +66,7 @@ public class TemperatureAsyncTask extends AsyncTask<CalibrationParameters, Void,
     protected void onPostExecute(final CalibrationParameters result) {
         int waitTime = 250;
         if(result.response.equals("Error: Message Timeout")) {
-            Log.i(TAG, "Message Time out, exiting thread");
+            Log.i(TAG, "Message Time out, trying again");
         } else {
             // only keep one digit
             DecimalFormat df = new DecimalFormat("#.#");
